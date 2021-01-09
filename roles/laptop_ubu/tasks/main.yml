@@ -1,2 +1,38 @@
 ---
 # tasks file for laptop-ubu
+
+- name: "ensure apt will work on this ubu system"
+  command: apt-get install --reinstall python3-apt
+
+- name: "Add user kurt to sudo"
+  lineinfile:
+    path: /etc/sudoers.d/kurt
+    line: 'kurt ALL=(ALL) NOPASSWD: ALL'
+    state: present
+    mode: 0440
+    create: yes
+    validate: 'visudo -cf %s'
+
+
+- name: Set includedir in sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    line: "#includedir /etc/sudoers.d"
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: "add handbrake PPA"
+  apt_repository:
+    repo: ppa:stebbins/handbrake-releases
+    state: present
+    update_cache: True
+    validate_certs: False
+
+- name: "install handbrake"
+  package:
+    state: latest
+    name: "{{hbpkgs}}"
+  vars:
+    hbpkgs:
+      - handbrake-gtk
+      - handbrake-cli

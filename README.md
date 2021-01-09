@@ -1,6 +1,7 @@
 # ansible_ubuntu_build
 An ansible play to build my laptop config
 
+ansible-playbook --connection=local 127.0.0.1 build_laptop.yml
 ## Notes:
 
 ### setting up repos

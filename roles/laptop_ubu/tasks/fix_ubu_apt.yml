@@ -1,0 +1,64 @@
+- name: Install python3-apt 
+  when:
+    - ansible_facts['distribution'] == 'Ubuntu'
+    - ansible_facts['distribution_major_version'] == '18'
+  block:
+
+    - file:
+        path: "{{ virtualenvDirectory }}/src"
+        state: directory
+        owner: "{{ systemUser }}"
+        group: "{{ systemUser }}"
+        mode: '0750'
+
+    - name: Download python3-apt package
+      shell: "apt-get download python3-apt"
+      args:
+        chdir: "{{ virtualenvDirectory }}/src"
+        warn: false
+        
+    - name: Get filename of downloaded package
+      find:
+        paths: "{{ virtualenvDirectory }}/src"
+        file_type: file
+        patterns: python3-apt*
+      register: findResult
+  
+    - fail:
+        msg: Downloaded package was not found
+      when: findResult is undefined or findResult.files|length == 0
+
+    - set_fact: 
+        python3AptPackageFileName: "{{ findResult.files[0].path|regex_replace('^.*/(.*)$','\\1') }}"
+      when: findResult is defined
+
+    - name: Extract package
+      shell: dpkg -x {{ python3AptPackageFileName }} python3-apt
+      args:
+        chdir: "{{ virtualenvDirectory }}/src"
+
+    - name: Get list of sharable objects
+      find:
+        paths: "{{ virtualenvDirectory }}/src/python3-apt/usr/lib/python3/dist-packages" # Path should stay stable throughout python 3.x I guess
+        file_type: file
+        patterns: '*.so'
+      register: findResult
+    - set_fact:
+        python3AptShareableObjectsFilenames: "{{ python3AptShareableObjectsFilenames|default([]) + [item.path|regex_replace('^.*/(.*)$','\\1')] }}"
+      with_items: "{{ findResult.files }}"
+
+    - name: Copy package into virtualenv lib directory
+      copy:
+        src: "{{ virtualenvDirectory }}/src/python3-apt/usr/lib/python3/dist-packages/"
+        dest: "{{ virtualenvDirectory }}/lib/{{ altInterpreterFileName }}/site-packages/"
+        remote_src: yes
+        owner: "{{ systemUser }}"
+        group: "{{ systemUser }}"
+        mode: '0750'
+
+    - name: Rename shareable objects
+      shell: "mv {{ item }} {{ item|regex_replace('(.*)\\..*\\.(.*)', '\\1.\\2') }}"
+      args:
+        chdir: "{{ virtualenvDirectory }}/lib/{{ altInterpreterFileName }}/site-packages/"
+      with_items: "{{ python3AptShareableObjectsFilenames }}"
+
