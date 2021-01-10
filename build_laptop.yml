@@ -4,3 +4,5 @@
   connection: local
   roles:
     - laptop_ubu
+  vars:
+    local_user: kurt

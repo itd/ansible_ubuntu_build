@@ -6,8 +6,8 @@
 
 - name: "Add user kurt to sudo"
   lineinfile:
-    path: /etc/sudoers.d/kurt
-    line: 'kurt ALL=(ALL) NOPASSWD: ALL'
+    path: "/etc/sudoers.d/{{local_user}}"
+    line: '{{local_user}} ALL=(ALL) NOPASSWD: ALL'
     state: present
     mode: 0440
     create: yes
@@ -21,18 +21,22 @@
     state: present
     validate: "/usr/sbin/visudo -cf %s"
 
-- name: "add handbrake PPA"
+- name: "add PPAs"
   apt_repository:
-    repo: ppa:stebbins/handbrake-releases
+    repo: '{{ item }}'
     state: present
     update_cache: True
     validate_certs: False
+  with_items:RE
+    - ppa:stebbins/handbrake-releases
+    - ppa:audio-recorder/ppa
 
 - name: "install handbrake"
-  package:
+  apt:
     state: latest
-    name: "{{hbpkgs}}"
+    name: "{{ pkgs }}"
   vars:
-    hbpkgs:
+    pkgs:
       - handbrake-gtk
       - handbrake-cli
+      - audio-recorder

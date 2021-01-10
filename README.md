@@ -21,14 +21,27 @@ ansible-playbook --connection=local 127.0.0.1 build_laptop.yml
     apt update
     apt install openssh-server vim 
     net-tools
-    ubuntu-restricted-extras 
-    build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev 
+    ubuntu-restricted-extras
+    build-essential libssl-dev libffi-dev python3-dev
+    pkg-config libc6-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev 
     handbrake-gtk handbrake-cli 
     libdvd-pkg
     chromium-codecs-ffmpeg-extra chromium-codecs-ffmpeg chromium-browser
     enpass
     steam
 
+libdvdnav4 
+libdvdread4
+gstreamer1.0-plugins-bad 
+gstreamer1.0-plugins-ugly
+smplayer mplayer-gui
+# xine-ui
+dpkg-reconfigure libdvd-pkg
+
+
+sudo apt-add-repository ppa:audio-recorder/ppa
+sudo apt-get update
+sudo apt-get install audio-recorder
 
 https://linuxconfig.org/how-to-install-steam-on-ubuntu-20-04-focal-fossa-linux
 ref: https://www.makemkv.com/forum/viewtopic.php?f=3&t=224
