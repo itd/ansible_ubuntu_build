@@ -1,6 +1,23 @@
 # ansible_ubuntu_build
 An ansible play to build my laptop config
 
+Run with:
+
+    ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
+
+Example inventory that makes an alias for localhost that uses Python3
+
+    localhost-py3 ansible_host=localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+    
+    # Example of setting a group of hosts to use Python3
+    [py3-hosts]
+    ubuntu16
+    fedora27
+    
+    [py3-hosts:vars]
+    ansible_python_interpreter=/usr/bin/python3
+
+
 ansible-playbook --connection=local 127.0.0.1 build_laptop.yml
 ## Notes:
 
@@ -38,7 +55,14 @@ smplayer mplayer-gui
 # xine-ui
 dpkg-reconfigure libdvd-pkg
 
+openconnect
+Suggested packages:
+  dnsmasq resolvconf
 
+###CAC / HSPD-12 card
+opensc libpcsclite1 pcscd pcsc-tools
+
+### audio recorder
 sudo apt-add-repository ppa:audio-recorder/ppa
 sudo apt-get update
 sudo apt-get install audio-recorder

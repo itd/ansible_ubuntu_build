@@ -58,20 +58,45 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
 
-    alias grep='grep --color=auto '
-    alias fgrep='fgrep --color=auto '
-    alias egrep='egrep --color=auto '
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -82,58 +107,61 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# enable programmable bash completion features
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
-
-# git 
-# brew install git bash-completion
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-source $(brew --prefix)/etc/bash_completion.d/git-completion.bash
-source $(brew --prefix)/etc/bash_completion.d/git-prompt.sh
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
 fi
-source /usr/local/etc/bash_completion.d/git-prompt.sh
-
-GIT_PS1_SHOWDIRTYSTATE=true
-GIT_PS1_SHOWCOLORHINTS=true
-
 
 # golang
-#export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/usr/local/go/bin
 
-# GIT_PROMPT_ONLY_IN_REPO=1
-# source ~/.bash-git-prompt/gitprompt.sh
-# brew install bash-git-prompt
-# if [ -f "/usr/local/opt/bash-git-prompt/share/gitprompt.sh" ]; then
-#   __GIT_PROMPT_DIR="/usr/local/opt/bash-git-prompt/share"
-#   source "/usr/local/opt/bash-git-prompt/share/gitprompt.sh"
+GIT_PROMPT_ONLY_IN_REPO=1
+source ~/.bash-git-prompt/gitprompt.sh
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/gtk-2.0/modules/
+export GTK_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/gtk-2.0/modules/
+
+# load googledrive
+#google-drive-ocamlfuse ~/googledrive
+#google-drive-ocamlfuse ~/googledrive
+#if [ ! -f "~/googledrive/.i_am_mounted" ]; then google-drive-ocamlfuse ~/googledrive; fi
+
+#Disable the weird alt-left switch to terminal mode
+#sudo kbd_mode -s
+
+#byobu-enable
+
+export ANSIBLE_STDOUT_CALLBACK=debug
+
+export PATH=$PATH:/opt/Enpass/bin/
+
+export PS1="\n\D{%F %T}\033[0;32;48m\n\u@\h:\w\033[0;39;48m\n\$ "
+
+#xdg-open https://teams.microsoft.com/_#/conversations/19:58b62ebd-b631-490d-84b3-a3fb3376a575_f75434de-f4a5-4720-a655-9e8f6313409d@unq.gbl.spaces?ctx=chat
+
+# # added by Anaconda3 2018.12 installer
+# # >>> conda init >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$(CONDA_REPORT_ERRORS=false '/home/kbendl/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     \eval "$__conda_setup"
+# else
+#     if [ -f "/home/kbendl/anaconda3/etc/profile.d/conda.sh" ]; then
+#         . "/home/kbendl/anaconda3/etc/profile.d/conda.sh"
+#         CONDA_CHANGEPS1=false conda activate base
+#     else
+#         \export PATH="/home/kbendl/anaconda3/bin:$PATH"
+#     fi
 # fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-
-
-#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/gtk-2.0/modules/
-#export GTK_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/gtk-2.0/modules/
-
-##google-cloud-sdk is installed at /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk. Add your profile:
-#  for bash users
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
-# vscode
-export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-
-# brew
-export PATH="/usr/local/sbin:/Users/kbendl/bin:$PATH"
-
-# byobu-enable
-# 
-# export PS1="\n\D{%F %T}\033[0;32;48m\n\u@\h:\w\033[38;5;249m\n\$ "
-# with git-prompt
-export PYTHONHTTPSVERIFY=0
-
-export PS1='\n\D{%F %T}\n\033[32m\]\u@\h\[\033[00m:\w\033[94m\]$(__git_ps1)\033[00m\n\\$ '
-
+# unset __conda_setup
+# # <<< conda init <<<
+# # load keyboard remap settings
+# xmodmap .xmodmaprc
 
 

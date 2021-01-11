@@ -1,8 +1,21 @@
 ---
 # tasks file for laptop-ubu
 
-- name: "ensure apt will work on this ubu system"
-  command: apt-get install --reinstall python3-apt
+#- name: "ensure apt will work on this ubu system"
+#  command: apt-get install --reinstall python3-apt
+
+- name: "bash stuff"
+  copy:
+    src: '{{item}}'
+    dest: '/home/{{local_user}}/{{item}}'
+    owner: "{{local_user}}"
+    group: "{{local_user}}"
+    mode: '0640'
+  with_items:
+    - .bashrc
+    - .bash_aliases
+  tags:
+    - localfiles
 
 - name: "Add user kurt to sudo"
   lineinfile:
@@ -27,9 +40,42 @@
     state: present
     update_cache: True
     validate_certs: False
-  with_items:RE
+  with_items:
     - ppa:stebbins/handbrake-releases
     - ppa:audio-recorder/ppa
+
+- name: "install utilities"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+  vars:
+    pkgs:
+      - openssh-server
+      - vim
+      - net-tools
+      - ubuntu-restricted-extras
+      - build-essential
+      - libssl-dev
+      - libffi-dev
+      - python3-dev
+      - pkg-config
+      - libc6-dev
+      - libexpat1-dev
+      - libavcodec-dev
+      - libgl1-mesa-dev
+      - qtbase5-dev
+      - zlib1g-dev
+
+- name: "install apps and utils"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+  vars:
+    pkgs:
+      - chromium-codecs-ffmpeg-extra
+      - chromium-codecs-ffmpeg
+      - chromium-browser
+
 
 - name: "install handbrake"
   apt:
@@ -40,3 +86,51 @@
       - handbrake-gtk
       - handbrake-cli
       - audio-recorder
+      - libdvd-pkg
+
+- name: "install hspd-12 packages"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+  vars:
+    pkgs:
+      - opensc
+      - libpcsclite1
+      - pcscd
+      - pcsc-tools
+  tags:
+    - hspd12
+
+
+- name: "install media stuff"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+  vars:
+    pkgs:
+      - audio-recorder
+    apt install openssh-server vim
+    net-tools
+    ubuntu-restricted-extras
+    build-essential libssl-dev libffi-dev python3-dev
+    pkg-config libc6-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
+    handbrake-gtk handbrake-cli
+    libdvd-pkg
+    chromium-codecs-ffmpeg-extra chromium-codecs-ffmpeg chromium-browser
+    enpass
+    steam
+
+libdvdnav4
+libdvdread4
+gstreamer1.0-plugins-bad
+gstreamer1.0-plugins-ugly
+smplayer mplayer-gui
+# xine-ui
+dpkg-reconfigure libdvd-pkg
+
+openconnect
+Suggested packages:
+  dnsmasq resolvconf
+
+###CAC / HSPD-12 card
+opensc libpcsclite1 pcscd pcsc-tools
