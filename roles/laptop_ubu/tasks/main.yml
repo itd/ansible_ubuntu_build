@@ -44,6 +44,31 @@
     - ppa:stebbins/handbrake-releases
     - ppa:audio-recorder/ppa
 
+
+- name: "Add apt_key  - prep for enpass install"
+  apt_key:
+    url: https://apt.enpass.io/keys/enpass-linux.key
+    state: present
+
+- name: "Add enpass repo"
+  copy:
+    src: '{{item}}'
+    dest: '/etc/apt.lists.d/enpass.list'
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  with_items:
+    - enpass.list
+
+- name: "Ansible install enpass"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+    update_cache: yes
+  vars:
+    pkgs:
+      - enpass
+
 - name: "install utilities"
   apt:
     state: latest
@@ -109,16 +134,13 @@
   vars:
     pkgs:
       - audio-recorder
-    apt install openssh-server vim
-    net-tools
-    ubuntu-restricted-extras
-    build-essential libssl-dev libffi-dev python3-dev
-    pkg-config libc6-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
-    handbrake-gtk handbrake-cli
-    libdvd-pkg
-    chromium-codecs-ffmpeg-extra chromium-codecs-ffmpeg chromium-browser
-    enpass
-    steam
+      - ubuntu-restricted-extras
+      - libavcodec-dev
+      - libgl1-mesa-dev
+      - qtbase5-dev
+      - zlib1g-dev
+      - enpass
+#    steam
 
 libdvdnav4
 libdvdread4
