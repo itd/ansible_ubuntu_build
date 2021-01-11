@@ -90,6 +90,7 @@
       - libgl1-mesa-dev
       - qtbase5-dev
       - zlib1g-dev
+      - openconnect
 
 - name: "install apps and utils"
   apt:
@@ -140,19 +141,31 @@
       - qtbase5-dev
       - zlib1g-dev
       - enpass
+      - libdvdnav4
+      - libdvdread4
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+      - smplayer
+      - mplayer-gui
+
+- name: "Setup/reconfigure libdvd-pkg"
+  debconf:
+    name: libdvd-pkg
+    #question: libdvd-pkg/build
+    #value: 'true'
+  tags:
+    - libdvd
+
 #    steam
 
-libdvdnav4
-libdvdread4
-gstreamer1.0-plugins-bad
-gstreamer1.0-plugins-ugly
-smplayer mplayer-gui
-# xine-ui
-dpkg-reconfigure libdvd-pkg
+# Install a snap with classic confinement
+- name: "Install snap with option --classic"
+  become: yes
+  become_user: "{{local_user}}"
+  community.general.snap:
+    name: espanso
+    classic: yes
+  tags:
+    - snaps
 
-openconnect
-Suggested packages:
-  dnsmasq resolvconf
-
-###CAC / HSPD-12 card
-opensc libpcsclite1 pcscd pcsc-tools
+#  dnsmasq resolvconf

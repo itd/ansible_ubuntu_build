@@ -3,6 +3,7 @@ An ansible play to build my laptop config
 
 Run with:
 
+    ansible-galaxy install -r requirements.yml
     ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
 
 Example inventory that makes an alias for localhost that uses Python3
