@@ -91,6 +91,7 @@
       - qtbase5-dev
       - zlib1g-dev
       - openconnect
+      - mlocate
 
 - name: "install apps and utils"
   apt:
@@ -147,6 +148,7 @@
       - gstreamer1.0-plugins-ugly
       - smplayer
       - mplayer-gui
+      - vlc
 
 - name: "Setup/reconfigure libdvd-pkg"
   debconf:
