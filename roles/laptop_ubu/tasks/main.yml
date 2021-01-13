@@ -68,6 +68,13 @@
   vars:
     pkgs:
       - enpass
+- name: "Things to ensure do not exist"
+  apt:
+    state: absent
+    name: "{{ xpkgs }}"
+  vars:
+    xpkgs:
+      - thunderbird
 
 - name: "install utilities"
   apt:
