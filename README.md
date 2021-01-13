@@ -94,3 +94,37 @@ For `makemkv-bin` package:
     sudo apt update
     sudo apt install google-drive-ocamlfuse
 
+
+### epson image scan
+
+Epson image scan software - ubuntu 20
+
+ref: https://help.ubuntu.com/community/sane_Troubleshooting
+
+    sane-find-scanner
+    found USB scanner (vendor=0x04b8, product=0x1130) at libusb:001:002
+
+    https://download2.ebz.epson.net/imagescanv3/ubuntu/lts1/deb/x64/imagescan-bundle-ubuntu-20.04-3.63.0.x64.deb.tar.gz
+
+    apt-get install simple-scan sane sane-utils libsane xsane
+    mkdir  /usr/share/sane/snapscan
+    cp /usr/share/utsushi/esfw010c.bin /usr/share/sane/snapscan/
+
+    lineinfile:
+    /etc/sane.d/snapscan.conf
+    /usr/share/sane/snapscan/esfw010c.bi
+
+    scanimage -L
+    device `escl:https://192.168.1.100:443' is a ESCL EPSON ET-3750 Series SSL flatbed scanner
+    device `escl:http://192.168.1.100:443' is a ESCL EPSON ET-3750 Series flatbed scanner
+    device `escl:http://127.0.0.1:60000' is a ESCL ET-3750 Series [583445513037323005] flatbed scanner
+
+USB 3 scanner workaround:
+
+    /etc/systemd/user.conf
+    
+At the bottom of the file:
+
+    DefaultEnvironment=SANE_USB_WORKAROUND=1
+
+

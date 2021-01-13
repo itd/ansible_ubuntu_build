@@ -175,7 +175,7 @@
 
 # Epson image scan software - ubuntu 20
 #  https://download2.ebz.epson.net/imagescanv3/ubuntu/lts1/deb/x64/imagescan-bundle-ubuntu-20.04-3.63.0.x64.deb.tar.gz
--
+
 # install modulo
 # # Make sure to have the $HOME/opt directory
 #mkdir -p $HOME/opt
