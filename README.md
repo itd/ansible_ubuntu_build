@@ -72,7 +72,7 @@ https://linuxconfig.org/how-to-install-steam-on-ubuntu-20-04-focal-fossa-linux
 ref: https://www.makemkv.com/forum/viewtopic.php?f=3&t=224
 
 ### makemkv install
-    get_url htbtps://www.makemkv.com/download/makemkv-bin-1.15.4.tar.gz
+    get_url https://www.makemkv.com/download/makemkv-bin-1.15.4.tar.gz
     get_url https://www.makemkv.com/download/makemkv-oss-1.15.4.tar.gz
 
 For `makemkv-oss` package:
@@ -126,5 +126,14 @@ USB 3 scanner workaround:
 At the bottom of the file:
 
     DefaultEnvironment=SANE_USB_WORKAROUND=1
+
+VSCode?:
+
+    sudo apt install software-properties-common apt-transport-https wget
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+
+
+ext install eamodio.gitlens
 
 

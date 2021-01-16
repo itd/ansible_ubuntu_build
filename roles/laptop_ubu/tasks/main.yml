@@ -53,12 +53,18 @@
 - name: "Add enpass repo"
   copy:
     src: '{{item}}'
-    dest: '/etc/apt.lists.d/enpass.list'
+    dest: '/etc/apt/sources.list.d/'
     owner: "root"
     group: "root"
     mode: '0644'
   with_items:
     - enpass.list
+    - vscode.list
+
+- name: "get vscode key"
+  shell: "wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -"
+  tags:
+    - vscode
 
 - name: "Ansible install enpass"
   apt:
@@ -68,6 +74,7 @@
   vars:
     pkgs:
       - enpass
+
 - name: "Things to ensure do not exist"
   apt:
     state: absent
@@ -84,13 +91,21 @@
     pkgs:
       - openssh-server
       - vim
+      - git
+      - lsof
+      - lshw
       - net-tools
       - ubuntu-restricted-extras
       - build-essential
+      - gnome-tweak-tool
+      - gnome-tweaks
       - libssl-dev
       - libffi-dev
       - python3-dev
+      - python3-pip
+      - python3-virtualenv
       - pkg-config
+      - jq
       - libc6-dev
       - libexpat1-dev
       - libavcodec-dev
@@ -99,6 +114,11 @@
       - zlib1g-dev
       - openconnect
       - mlocate
+      - software-properties-common 
+      - apt-transport-https 
+      - wget
+      - yq
+
 
 - name: "install apps and utils"
   apt:
@@ -109,6 +129,8 @@
       - chromium-codecs-ffmpeg-extra
       - chromium-codecs-ffmpeg
       - chromium-browser
+      - enpass
+      - code
 
 
 - name: "install handbrake"
@@ -121,6 +143,7 @@
       - handbrake-cli
       - audio-recorder
       - libdvd-pkg
+
 
 - name: "install hspd-12 packages"
   apt:
@@ -140,9 +163,13 @@
   apt:
     state: latest
     name: "{{ pkgs }}"
+  tags: 
+    - apps
   vars:
     pkgs:
       - audio-recorder
+      - exfat-utils
+      - exfat-fuse
       - ubuntu-restricted-extras
       - libavcodec-dev
       - libgl1-mesa-dev
@@ -156,6 +183,7 @@
       - smplayer
       - mplayer-gui
       - vlc
+      - gparted
 
 - name: "Setup/reconfigure libdvd-pkg"
   debconf:
@@ -179,8 +207,10 @@
     classic: yes
   tags:
     - snaps
+  when:
+    - ansible_facts['distribution_major_version'] =< "20"
 
-# Epson image scan software - ubuntu 20
+
 #  https://download2.ebz.epson.net/imagescanv3/ubuntu/lts1/deb/x64/imagescan-bundle-ubuntu-20.04-3.63.0.x64.deb.tar.gz
 
 # install modulo
