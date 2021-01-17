@@ -3,4 +3,5 @@
   roles:
     - laptop_ubu
   vars:
-    local_user: kurt
+    packer_ver: '1.6.6'
+    # local_user: kurt
