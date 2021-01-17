@@ -137,8 +137,10 @@ export GTK_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/gtk-2.0/modules/
 
 #byobu-enable
 
-export ANSIBLE_STDOUT_CALLBACK=debug
+#The universe hates caps lock, and so do I:
+setxkbmap -layout us -option ctrl:nocaps
 
+export ANSIBLE_STDOUT_CALLBACK=debug
 export PATH=$PATH:/opt/Enpass/bin/
 
 export PS1="\n\D{%F %T}\033[0;32;48m\n\u@\h:\w\033[0;39;48m\n\$ "

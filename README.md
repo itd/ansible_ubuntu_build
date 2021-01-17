@@ -1,21 +1,25 @@
 # ansible_ubuntu_build
 An ansible play to build my laptop config
 
-Run with:
+Run with::
 
-    ansible-galaxy install -r requirements.yml
-    ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
+    cd ~
+    echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
+    apt install python3-virtualenv -y
+    sudo apt install python3-virtualenv -y
+    ./makeall.sh
+
 
 Example inventory that makes an alias for localhost that uses Python3
 
     localhost-py3 ansible_host=localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
     
     # Example of setting a group of hosts to use Python3
-    [py3-hosts]
+    [py3_hosts]
     ubuntu16
     fedora27
     
-    [py3-hosts:vars]
+    [py3_hosts:vars]
     ansible_python_interpreter=/usr/bin/python3
 
 
@@ -137,3 +141,4 @@ VSCode?:
 ext install eamodio.gitlens
 
 
+openconnect --juniper  https://hd.nrel.gov

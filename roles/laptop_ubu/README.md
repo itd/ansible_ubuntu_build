@@ -1,7 +1,10 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Run it like this::
+
+    ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
+
 
 Requirements
 ------------
