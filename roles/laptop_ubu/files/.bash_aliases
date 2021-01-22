@@ -14,6 +14,7 @@ alias rkey='ssh-keygen -f "/Users/kbendl/.ssh/known_hosts" -R '
 alias nett="deactivate  > /dev/null 2>&1 ; cd /opt/code/network/ansible/switch-config; git pull"
 alias ans="deactivate > /dev/null 2>&1 ;  cd /opt/code/ansible/ansible_configs/; source /opt/code/ansible/venv-ans/bin/activate; git pull"
 alias elas="deactivate > /dev/null 2>&1 ; cd /opt/code/elastic/elastic-ansible/; source /opt/code/elastic/venv-es/bin/activate; git pull"
+alias lapt="deactivate > /dev/null 2>&1 ; cd /opt/code/ansible_ubuntu_build/;  source venv/bin/activate; git pull"
 
 alias shpc="deactivate > /dev/null 2>&1 ; cd /opt/code/os/; source /opt/code/os/venv/bin/activate ; source /opt/code/os/kolla-admin-openrc.sh"
 alias stackk="shpc"

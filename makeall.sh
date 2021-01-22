@@ -1,4 +1,8 @@
 #!/bin/bash
+# gsettings is a pita in ansible, so doing it here. "Perfect is the enemy of good."
+gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier']"
+
+# go on then...
 python3 -m venv venv
 source venv/bin/activate
 pip install -Ur requirements.txt

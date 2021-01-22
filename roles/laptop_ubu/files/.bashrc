@@ -138,7 +138,8 @@ export GTK_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/gtk-2.0/modules/
 #byobu-enable
 
 #The universe hates caps lock, and so do I:
-setxkbmap -layout us -option ctrl:nocaps
+#setxkbmap -layout us -option ctrl:nocaps
+gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier']"
 
 export ANSIBLE_STDOUT_CALLBACK=debug
 export PATH=$PATH:/opt/Enpass/bin/

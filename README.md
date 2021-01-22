@@ -9,6 +9,7 @@ Run with::
     sudo apt install python3-virtualenv -y
     ./makeall.sh
 
+    ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
 
 Example inventory that makes an alias for localhost that uses Python3
 
@@ -23,7 +24,7 @@ Example inventory that makes an alias for localhost that uses Python3
     ansible_python_interpreter=/usr/bin/python3
 
 
-ansible-playbook --connection=local 127.0.0.1 build_laptop.yml
+ansible-playbook --connection=local 127.0.0.1 build_laptop.yml ansible_python_interpreter=/usr/bin/python3
 ## Notes:
 
 ### setting up repos
@@ -142,3 +143,4 @@ ext install eamodio.gitlens
 
 
 openconnect --juniper  https://hd.nrel.gov
+
