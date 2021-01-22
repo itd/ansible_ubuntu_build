@@ -244,6 +244,7 @@
       - audacity                      # simple audio editor
       - audio-recorder
       - clementine                    # music player/manager
+      - ffmpeg                        # Tools for transcoding, streaming, and playing multimedia
       - gimp                          # image editor
       - gimp-help-en                  # image editor documentation
       - gstreamer1.0-plugins-bad
@@ -254,6 +255,7 @@
       - lame                          # MP3 encoder and utilities
       - libavcodec-dev
       - libdvd-pkg
+      - libgdk3.0-cil                 # for reaper
       - libgl1-mesa-dev
       - mplayer-gui
       - pavucontrol                   # Pulseaudio application-level volume control
