@@ -265,6 +265,12 @@
       - ubuntu-restricted-extras
       - vlc
       - zlib1g-dev
+      - ubuntustudio-controls
+      - jack-tools
+      - meterbridge
+      - python-gi-cairo
+      - python3-numpy
+      - carla
 
 
 - name: "install media stuff"
