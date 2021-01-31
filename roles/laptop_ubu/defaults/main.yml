@@ -2,3 +2,4 @@
 # defaults file for laptop-ubu
 local_user: "{{ lookup('env', 'USER') | default('nobody', True) }}"
 packer_ver: '1.6.6'
+makemkv_ver: '1.15.4'

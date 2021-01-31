@@ -1,0 +1,101 @@
+---
+
+
+- name: 'Create the /opt/tmp directory structure if it does not exist'
+  ansible.builtin.file:
+    path: "/opt/tmp/makemkv/{{ item }}"
+    state: directory
+    owner: "{{local_user}}"
+    group: "{{local_user}}"
+    mode: '0755'
+  loop:
+    - oss
+    - bin
+
+# - name: 'Perms on /opt/tmp'
+#   ansible.builtin.file:
+#     path: /opt/tmp
+#     recurse: yes
+#     owner: "{{local_user}}"
+#     group: "{{local_user}}"
+
+- name: "install makemkv for linux build requirements"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+  tags: 
+    - apps
+    - audioprod
+  vars:
+    pkgs:
+      - build-essential 
+      - pkg-config 
+      - libc6-dev 
+      - libssl-dev 
+      - libexpat1-dev 
+      - libavcodec-dev 
+      - libgl1-mesa-dev 
+      - qtbase5-dev 
+      - zlib1g-dev
+
+
+- name: "Unarchive a file that needs to be downloaded"
+  ansible.builtin.unarchive:
+    url: "https://www.makemkv.com/download/makemkv-{{ item }}-{{ makemkv_version }}.tar.gz"
+    dest: /opt/tmp/makemkv/{{ item }}/
+    remote_src: yes
+    loop:
+      - oss
+      - bin
+
+# - name: download the tarballs
+#     get_url:
+#       url: "https://www.makemkv.com/download/makemkv-{{item}}-{{makemkv_version}}.tar.gz"
+#       dest: /opt/tmp/
+#       mode: '0644'
+#     loop:
+#       - oss
+#       - bin
+
+## OSS
+/configure
+make
+sudo make install
+
+- name: configure the build
+  shell:
+    chdir: /opt/tmp/makemkv/oss/
+    cmd: /opt/tmp/makemkv/oss/configure
+    
+- name: Build the default target
+  community.general.make:
+    chdir: "/opt/tmp/makemkv/{{ item }}/"
+  loop:
+      - oss
+      - bin
+
+- name: "Run `install` target for bin as root"
+  community.general.make:
+    chdir: /opt/tmp/makemkv/bin/
+    target: install
+  become: yes
+
+- name: Build 'all' target with extra arguments
+  community.general.make:
+    chdir: /home/ubuntu/cool-project
+    target: all
+    params:
+      NUM_THREADS: 4
+      BACKEND: lapack
+
+- name: Build 'all' target with a custom Makefile
+  community.general.make:
+    chdir: /home/ubuntu/cool-project
+    target: all
+    file: /some-project/Makefile
+
+
+## bin
+make
+sudo make install
+
