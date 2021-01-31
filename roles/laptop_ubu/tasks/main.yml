@@ -1,5 +1,28 @@
 ---
 # tasks file for laptop-ubu
+
+#- name: "grub tweaks"
+#  
+  # GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+  # https://cdn.akamai.steamstatic.com/client/installer/steam.deb
+  # wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
+
+- name: "install essential build utils"
+  apt:
+    state: latest
+    name: "{{ pkgs }}"
+  tags:
+    - apps
+    - essentials
+  vars:
+    pkgs:
+      - apt-transport-https
+      - build-essential
+      - gpgv
+      - python3-apt
+      - vim
+
+
 - name: 'Create the /opt/tmp directory if it does not exist'
   ansible.builtin.file:
     path: /opt/tmp
@@ -8,7 +31,7 @@
     group: "{{local_user}}"
     mode: '0755'
 
-- name: 'Pers on /opt/tmp'
+- name: 'Perms on /opt/tmp'
   ansible.builtin.file:
     path: /opt
     recurse: yes
@@ -56,6 +79,13 @@
     - ppa:audio-recorder/ppa
 
 
+- name: "Install kxstudio meta package from URL."
+  apt:
+    deb: https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
+  tags:
+    - kxstudio
+    - audioprod
+
 - name: "Add apt_key  - prep for enpass install"
   apt_key:
     url: https://apt.enpass.io/keys/enpass-linux.key
@@ -86,6 +116,33 @@
     pkgs:
       - enpass
 
+- name: "jackd might need to be installed first"
+  apt:
+    state: latest
+    name: "{{pkgs}}"
+  tags:
+    - kxstudio
+    - audioprod
+  vars:
+    pkgs:
+    - jackd2 
+    - jack-tools 
+    - jack-keyboard
+
+- name: "Utils for jackd"
+  apt:
+    state: latest
+    name: "{{pkgs}}"
+  tags:
+    - kxstudio
+  vars:
+    pkgs:
+      - cadence
+      - cadence-data
+      - cadence-tools
+      - carla
+
+
 - name: "Things to ensure do not exist"
   apt:
     state: absent
@@ -103,8 +160,6 @@
     - kshell
   vars:
     pkgs:
-      - apt-transport-https
-      - build-essential
       - copyq
       - exfat-fuse
       - exfat-utils
@@ -153,7 +208,6 @@
       - mlocate
       - net-tools
       - openconnect
-      - openssh-server
       - partimage
       - pkg-config
       - python3-dev
@@ -165,7 +219,6 @@
       - terminator
       - ubuntu-restricted-extras
       - unzip
-      - vim
       - wget
       - xfsdump
       - xfsprogs
@@ -239,12 +292,12 @@
     name: "{{ pkgs }}"
   tags: 
     - apps
+    - audioprod
   vars:
     pkgs:
       - audacity                      # simple audio editor
       - audio-recorder
       - clementine                    # music player/manager
-      - ffmpeg                        # Tools for transcoding, streaming, and playing multimedia
       - gimp                          # image editor
       - gimp-help-en                  # image editor documentation
       - gstreamer1.0-plugins-bad
@@ -255,7 +308,6 @@
       - lame                          # MP3 encoder and utilities
       - libavcodec-dev
       - libdvd-pkg
-      - libgdk3.0-cil                 # for reaper
       - libgl1-mesa-dev
       - mplayer-gui
       - pavucontrol                   # Pulseaudio application-level volume control
@@ -265,12 +317,6 @@
       - ubuntu-restricted-extras
       - vlc
       - zlib1g-dev
-      - ubuntustudio-controls
-      - jack-tools
-      - meterbridge
-      - python-gi-cairo
-      - python3-numpy
-      - carla
 
 
 - name: "install media stuff"
@@ -321,13 +367,13 @@
       - pycharm-community
 
 
-- name: "Install packer from URL."
-  ansible.builtin.unarchive:
-    src: 'https://releases.hashicorp.com/packer/{{packer_ver}}/packer_{{packer_ver}}_linux_amd64.zip'
-    dest: '/usr/local/bin/'
-    remote_src: yes
-  tags:
-    - packer
+# - name: "Install packer from URL."
+#   ansible.builtin.unarchive:
+#     src: 'https://releases.hashicorp.com/packer/{{packer_ver}}/packer_{{packer_ver}}_linux_amd64.zip'
+#     dest: '/usr/local/bin/'
+#     remote_src: yes
+#   tags:
+#     - packer
 
 # - name: "MAP CAPS LOCK TO CTRL"
 #   become: yes
