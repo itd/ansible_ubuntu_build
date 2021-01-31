@@ -312,12 +312,13 @@
       - mplayer-gui
       - pavucontrol                   # Pulseaudio application-level volume control
       - qtbase5-dev
+      - sane-util                     # scanner utils
       - smplayer                      # mplayer gui media util
       - sox                           # utilities for working with audio
       - ubuntu-restricted-extras
       - vlc
+      - xsane                         # scanner utils
       - zlib1g-dev
-
 
 - name: "install media stuff"
   apt:
@@ -391,6 +392,17 @@
   tags:
     - kshell
 
+- name: "adding `local_user` to groups"
+  user:
+    name: "{{ local_user }}"
+    groups: "{{ item }}"
+    append: yes
+  tags:
+   - do_group
+  loop:
+      - audio
+      - scanner
+      - saned
 
 #  https://download2.ebz.epson.net/imagescanv3/ubuntu/lts1/deb/x64/imagescan-bundle-ubuntu-20.04-3.63.0.x64.deb.tar.gz
 
