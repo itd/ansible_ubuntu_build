@@ -1,33 +1,25 @@
 ---
 
-
-- name: 'Create the /opt/tmp directory structure if it does not exist'
+- name: "Create the /opt/tmp directory structure if it does not exist"
   ansible.builtin.file:
     path: "/opt/tmp/makemkv/{{ item }}"
     state: directory
     owner: "{{local_user}}"
     group: "{{local_user}}"
-    mode: '0755'
+    mode: "0755"
   loop:
     - oss
     - bin
 
-# - name: 'Perms on /opt/tmp'
-#   ansible.builtin.file:
-#     path: /opt/tmp
-#     recurse: yes
-#     owner: "{{local_user}}"
-#     group: "{{local_user}}"
-
 - name: "install makemkv for linux build requirements"
   apt:
     state: latest
-    name: "{{ pkgs }}"
+    name: "{{ mkv_pkgs }}"
   tags: 
     - apps
     - audioprod
   vars:
-    pkgs:
+    mkv_pkgs:
       - build-essential 
       - pkg-config 
       - libc6-dev 
@@ -38,64 +30,54 @@
       - qtbase5-dev 
       - zlib1g-dev
 
-
-- name: "Unarchive a file that needs to be downloaded"
-  ansible.builtin.unarchive:
-    url: "https://www.makemkv.com/download/makemkv-{{ item }}-{{ makemkv_version }}.tar.gz"
-    dest: /opt/tmp/makemkv/{{ item }}/
+- name: "untar"
+  unarchive:
+    src: "https://www.makemkv.com/download/makemkv-{{ item }}-{{ makemkv_ver }}.tar.gz"
+    dest: "/opt/tmp/makemkv/"
     remote_src: yes
-    loop:
-      - oss
-      - bin
-
-# - name: download the tarballs
-#     get_url:
-#       url: "https://www.makemkv.com/download/makemkv-{{item}}-{{makemkv_version}}.tar.gz"
-#       dest: /opt/tmp/
-#       mode: '0644'
-#     loop:
-#       - oss
-#       - bin
-
-## OSS
-/configure
-make
-sudo make install
-
-- name: configure the build
-  shell:
-    chdir: /opt/tmp/makemkv/oss/
-    cmd: /opt/tmp/makemkv/oss/configure
-    
-- name: Build the default target
-  community.general.make:
-    chdir: "/opt/tmp/makemkv/{{ item }}/"
   loop:
-      - oss
-      - bin
+    - oss
+    - bin
+
+- name: "Create the ~/tmp directory for eula"
+  ansible.builtin.file:
+    path: "/opt/tmp/makemkv/makemkv-bin-{{ makemkv_ver }}/tmp"
+    state: directory
+    owner: "{{local_user}}"
+    group: "{{local_user}}"
+    mode: "0755"
+
+- name: "touch the eula file"
+  ansible.builtin.file:
+    path: "/opt/tmp/makemkv/makemkv-bin-{{makemkv_ver }}/tmp/eula_accepted"
+    state: directory
+    owner: "{{local_user}}"
+    group: "{{local_user}}"
+    mode: "0755"
 
 - name: "Run `install` target for bin as root"
   community.general.make:
-    chdir: /opt/tmp/makemkv/bin/
+    chdir: "/opt/tmp/makemkv/makemkv-bin-{{ makemkv_ver }}/"
     target: install
   become: yes
 
-- name: Build 'all' target with extra arguments
+- name: "configure the build"
+  shell:
+    chdir: "/opt/tmp/makemkv/makemkv-{{ item }}-{{ makemkv_ver }}"
+    cmd:   "/opt/tmp/makemkv/makemkv-{{ item }}-{{ makemkv_ver }}/configure"
+  loop:
+    - oss
+  
+- name: Build the default target
   community.general.make:
-    chdir: /home/ubuntu/cool-project
-    target: all
-    params:
-      NUM_THREADS: 4
-      BACKEND: lapack
+    chdir: "/opt/tmp/makemkv/makemkv-oss-{{ makemkv_ver }}"
+    target: install
 
-- name: Build 'all' target with a custom Makefile
-  community.general.make:
-    chdir: /home/ubuntu/cool-project
-    target: all
-    file: /some-project/Makefile
-
-
-## bin
-make
-sudo make install
-
+# - name: download the tarballs
+#   get_url:
+#     url: "https://www.makemkv.com/download/makemkv-{{item}}-{{makemkv_ver }}.tar.gz"
+#     dest: /opt/tmp/
+#     mode: '0644'
+#   loop:
+#     - oss
+#     - bin

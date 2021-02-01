@@ -37,6 +37,7 @@
     recurse: yes
     owner: "{{local_user}}"
     group: "{{local_user}}"
+
    
 - name: "bash stuff"
   copy:
@@ -78,13 +79,27 @@
     - ppa:stebbins/handbrake-releases
     - ppa:audio-recorder/ppa
 
+- name: "include makemvk"
+  include_tasks:
+    file: makemkv.yml
+    apply:
+      tags: do_makemkv
+  tags: 
+    - do_makemkv
+# - name: 'Perms on /opt/tmp'
+#   ansible.builtin.file:
+#     path: /opt/tmp
+#     recurse: yes
+#     owner: "{{local_user}}"
+#     group: "{{local_user}}"
 
-- name: "Install kxstudio meta package from URL."
-  apt:
-    deb: https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
-  tags:
-    - kxstudio
-    - audioprod
+
+# - name: "Install kxstudio meta package from URL."
+#   apt:
+#     deb: https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
+#   tags:
+#     - kxstudio
+#     - audioprod
 
 - name: "Add apt_key  - prep for enpass install"
   apt_key:
@@ -400,9 +415,9 @@
   tags:
    - do_group
   loop:
-      - audio
-      - scanner
-      - saned
+    - audio
+    - scanner
+    - saned
 
 #  https://download2.ebz.epson.net/imagescanv3/ubuntu/lts1/deb/x64/imagescan-bundle-ubuntu-20.04-3.63.0.x64.deb.tar.gz
 
