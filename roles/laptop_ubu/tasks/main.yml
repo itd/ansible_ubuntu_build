@@ -19,6 +19,7 @@
       - apt-transport-https
       - build-essential
       - gpgv
+      - python-is-python3
       - python3-apt
       - vim
 
@@ -178,6 +179,7 @@
       - copyq
       - exfat-fuse
       - exfat-utils
+      - gconf2
       - git
       - gnome-tweak-tool
       - gnome-tweaks
@@ -235,6 +237,7 @@
       - ubuntu-restricted-extras
       - unzip
       - wget
+      - xclip
       - xfsdump
       - xfsprogs
       - xfsprogs
@@ -329,6 +332,7 @@
       - qtbase5-dev
       - sane-util                     # scanner utils
       - smplayer                      # mplayer gui media util
+      - sound-juicer
       - sox                           # utilities for working with audio
       - ubuntu-restricted-extras
       - vlc
@@ -418,6 +422,42 @@
     - audio
     - scanner
     - saned
+
+
+# add to /etc/sysctl.d/
+# fs.inotify.max_user_watches=524288
+# then: sysctl -p
+
+# - name: "get python" 
+#   shell: "echo $(ls /usr/bin/pyth* | grep -e 'python3\\.[0-9]$' | sort | tail -1)"
+#   register: PYVER
+#   become: yes
+#   tags:
+#     - foobar
+
+# # $ sudo ln -s /usr/local/$(ls /usr/bin/ | grep -e "python3\.[0-9]$" | sort | tail -1 ) /usr/local/python3
+
+# - stat: path=/usr/bin/python3
+#   register: p
+#   tags:
+#     - foobar
+
+# - debug: 
+#     msg: |
+#       "x
+#       x
+#       x
+#       x
+#       >>>>>>    {{ PYVER.stdout }} exists
+#       x
+#       x
+#       x
+#       x"
+
+#   #when: p.stat.exists
+#   tags:
+#     - foobar
+
 
 #  https://download2.ebz.epson.net/imagescanv3/ubuntu/lts1/deb/x64/imagescan-bundle-ubuntu-20.04-3.63.0.x64.deb.tar.gz
 

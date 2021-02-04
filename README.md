@@ -5,8 +5,7 @@ Run with::
 
     cd ~
     echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
-    apt install python3-virtualenv -y
-    sudo apt install python3-virtualenv -y
+    sudo apt install python3-virtualenv python-is-python3 -y
     ./makeall.sh
 
     ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
