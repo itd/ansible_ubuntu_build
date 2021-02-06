@@ -433,9 +433,39 @@
     - saned
 
 
-# add to /etc/sysctl.d/
-# fs.inotify.max_user_watches=524288
-# then: sysctl -p
+
+  - name: 'get the bash-git-promot checkout'
+    git:
+      repo: 'https://github.com/magicmonty/bash-git-prompt.git'
+      dest: '/home/{{ local_user }}/.bash-git-prompt'
+
+
+
+- name: Check File exists or not
+  stat: path=/tmp/check.txt
+  register: status
+
+
+- debug: var=status
+
+- name: Create file if does not exist
+  file:
+  state: touch
+  path: /tmp/check.txt
+  owner: lokesh
+  group: lokesh
+  mode: 0755
+  when: status.stat.exists == false
+
+- name: "inotify watcher increae for vscode"
+  copy:
+    content: "max_user_watches=524288"
+    dest: /etc/sysctl.d/fs_inotify_max_user_watches
+  tags:
+    - vscode_tweaks
+
+- name: "load the kernel tweaks for vscode"
+  command: sysctl -p
 
 # - name: "get python" 
 #   shell: "echo $(ls /usr/bin/pyth* | grep -e 'python3\\.[0-9]$' | sort | tail -1)"
