@@ -7,21 +7,30 @@
   # https://cdn.akamai.steamstatic.com/client/installer/steam.deb
   # wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
 
+- name: "register apps list"
+  set_fact:
+    ubu_apps: '{{u18_apps}}'
+
+- name: "register apps list"
+  set_fact:
+    ubu_apps: '{{u18_apps + u20_apps}}'
+  when: ansible_distribution_major_version == '20'
+
 - name: "install essential build utils"
   apt:
     state: latest
-    name: "{{ pkgs }}"
+    name: "{{ ubu_apps }}"
   tags:
     - apps
     - essentials
-  vars:
-    pkgs:
-      - apt-transport-https
-      - build-essential
-      - gpgv
-      - python-is-python3
-      - python3-apt
-      - vim
+  # vars:
+  #   pkgs:
+  #     - apt-transport-https
+  #     - build-essential
+  #     - gpgv
+  #     - python-is-python3
+  #     - python3-apt
+  #     - vim
 
 
 - name: 'Create the /opt/tmp directory if it does not exist'
