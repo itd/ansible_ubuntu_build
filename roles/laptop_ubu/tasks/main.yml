@@ -116,7 +116,7 @@
     url: https://apt.enpass.io/keys/enpass-linux.key
     state: present
 
-- name: "Add enpass repo"
+- name: "Add external repos"
   copy:
     src: '{{item}}'
     dest: '/etc/apt/sources.list.d/'
@@ -132,41 +132,18 @@
   tags:
     - vscode
 
+- name: "update all the packages first."
+  apt:
+    name: "*"
+    update_cache: yes
+
 - name: "Ansible install enpass"
   apt:
     state: latest
     name: "{{ pkgs }}"
-    update_cache: yes
   vars:
     pkgs:
       - enpass
-
-- name: "jackd might need to be installed first"
-  apt:
-    state: latest
-    name: "{{pkgs}}"
-  tags:
-    - kxstudio
-    - audioprod
-  vars:
-    pkgs:
-    - jackd2 
-    - jack-tools 
-    - jack-keyboard
-
-- name: "Utils for jackd"
-  apt:
-    state: latest
-    name: "{{pkgs}}"
-  tags:
-    - kxstudio
-  vars:
-    pkgs:
-      - cadence
-      - cadence-data
-      - cadence-tools
-      - carla
-
 
 - name: "Things to ensure do not exist"
   apt:
@@ -204,7 +181,7 @@
       - libssl-dev
       - lm-sensors                # computer internal sensor support
       - p7zip-full                # support extracting a wider variety of archives than supported by default
-      - code                      # VS Code
+      #- code                      # VS Code
       - curl                      # download files from the internet
       - wget                      # download files from the internet
       - gnupg2                    # secure communications toolkit
@@ -312,6 +289,18 @@
   tags:
     - hspd12
 
+- name: "media stuff: jackd might need to be installed first"
+  apt:
+    state: latest
+    name: "{{pkgs}}"
+  tags:
+    - kxstudio
+    - audioprod
+  vars:
+    pkgs:
+    - jackd2 
+    - jack-tools 
+    - jack-keyboard
 
 - name: "install media stuff"
   apt:
@@ -356,11 +345,16 @@
     ansible_distribution_major_version <= "18"
   tags:
     - apps
+    - kxstudion
   vars:
     pkgs:
       - libdvdnav4
       - libdvdread4
-
+      - cadence         # "Utils for jackd"
+      - cadence-data
+      - cadence-tools
+      - carla 
+      
 - name: "Setup/reconfigure libdvd-pkg"
   debconf:
     name: libdvd-pkg
@@ -432,40 +426,43 @@
     - scanner
     - saned
 
-
-
-  - name: 'get the bash-git-promot checkout'
-    git:
-      repo: 'https://github.com/magicmonty/bash-git-prompt.git'
-      dest: '/home/{{ local_user }}/.bash-git-prompt'
+- name: 'get the bash-git-promot checkout'
+  git:
+    repo: 'https://github.com/magicmonty/bash-git-prompt.git'
+    dest: '/home/{{ local_user }}/.bash-git-prompt'
 
 
 
-- name: Check File exists or not
-  stat: path=/tmp/check.txt
-  register: status
+- name: "Check if File exists or not"
+  stat:
+    path: /etc/sysctl.d/fs_inotify_max_user_watches.conf
+  register: inotify_status
+  tags:
+    - perf_tweaks
+    - vscode_tweaks
+
+- debug:  var=inotify_status.stat.exists
+  tags:
+    - perf_tweaks
+    - vscode_tweaks
 
 
-- debug: var=status
-
-- name: Create file if does not exist
-  file:
-  state: touch
-  path: /tmp/check.txt
-  owner: lokesh
-  group: lokesh
-  mode: 0755
-  when: status.stat.exists == false
-
-- name: "inotify watcher increae for vscode"
+- name: "inotify watcher increase for vscode"
   copy:
     content: "max_user_watches=524288"
-    dest: /etc/sysctl.d/fs_inotify_max_user_watches
+    dest: /etc/sysctl.d/fs_inotify_max_user_watches.conf
+  when: inotify_status.stat.exists == false
   tags:
     - vscode_tweaks
+    - perf_tweaks
 
 - name: "load the kernel tweaks for vscode"
   command: sysctl -p
+
+- name: "Last things: Clean cruft from the system."
+  apt:
+    autoclean: yes
+
 
 # - name: "get python" 
 #   shell: "echo $(ls /usr/bin/pyth* | grep -e 'python3\\.[0-9]$' | sort | tail -1)"
