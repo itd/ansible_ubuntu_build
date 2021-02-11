@@ -432,6 +432,13 @@
     dest: '/home/{{ local_user }}/.bash-git-prompt'
 
 
+- name: "Include steam base installer"
+  include_tasks:
+    file: steam.yml
+    apply:
+      tags: steam
+  tags: 
+    - steam
 
 - name: "Check if File exists or not"
   stat:
@@ -458,6 +465,8 @@
 
 - name: "load the kernel tweaks for vscode"
   command: sysctl -p
+
+
 
 - name: "Last things: Clean cruft from the system."
   apt:
