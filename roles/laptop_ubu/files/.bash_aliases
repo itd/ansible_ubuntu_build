@@ -4,6 +4,8 @@ alias hist="history | grep -i"
 alias r="reset"
 alias delds='find . |  grep ".DS_Store\|.*\.retry"  | xargs rm'
 
+exps1b='export PS1="\n\D{%F %T}\033[38;5;111m\n\u@\h:\w\033[0;37;48m\n\\\$ "'
+
 alias tup="mv ~/Downloads/Daily\ Notify* ~/Documents/terminations/ ; cd ~/Documents/terminations/ ; aws s3 sync . s3://nrel-terminations-hires-conversions/"
 
 alias bfg="java ~/bin/bfg-1.13.0.jar"
