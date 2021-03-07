@@ -9,7 +9,6 @@ u18_apps:
   - build-essential
   - gpgv
   - python3-apt
-  - vim
 
 u20_apps:
   - python-is-python3

@@ -163,6 +163,7 @@
   vars:
     pkgs:
       - copyq
+      - coptq-plugins
       - exfat-fuse
       - exfat-utils
       - gconf2
@@ -172,6 +173,7 @@
       - gparted
       - hexchat
       - hexchat-indicator
+      - hunspell
       - jq
       - libavcodec-dev
       - libc6-dev
@@ -222,6 +224,7 @@
       - terminator
       - ubuntu-restricted-extras
       - unzip
+      - vim
       - wget
       - xclip
       - xfsdump
