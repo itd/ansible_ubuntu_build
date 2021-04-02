@@ -1,8 +1,8 @@
 ---
 # defaults file for laptop-ubu
 local_user: "{{ lookup('env', 'USER') | default('nobody', True) }}"
-packer_ver: '1.6.6'
-makemkv_ver: '1.15.4'
+packer_ver: '1.7.0'
+makemkv_ver: '1.16.3'
 
 u18_apps:
   - apt-transport-https
