@@ -23,15 +23,6 @@
   tags:
     - apps
     - essentials
-  # vars:
-  #   pkgs:
-  #     - apt-transport-https
-  #     - build-essential
-  #     - gpgv
-  #     - python-is-python3
-  #     - python3-apt
-  #     - vim
-
 
 - name: 'Create the /opt/tmp directory if it does not exist'
   ansible.builtin.file:
@@ -88,6 +79,10 @@
   with_items:
     - ppa:stebbins/handbrake-releases
     - ppa:audio-recorder/ppa
+
+#curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+#sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+#sudo apt-get update && sudo apt-get install Packer
 
 - name: "include makemvk"
   include_tasks:
@@ -261,7 +256,7 @@
       - simplescreenrecorder          # screen recorder
       - wireshark                     # network traffic analyser
       - xournal                       # document editor/PDF annotator
-
+      - texlive-lang-portuguese
 
       # - fritzing                      # simple circuit designer
       # - fritzing-parts                # parts configuration for simple circuit designer      
@@ -317,6 +312,7 @@
       - audacity                      # simple audio editor
       - audio-recorder
       - clementine                    # music player/manager
+      - ffmpeg
       - gimp                          # image editor
       - gimp-help-en                  # image editor documentation
       - gstreamer1.0-plugins-bad
@@ -329,6 +325,7 @@
       - libdvd-pkg
       - libgl1-mesa-dev
       - mplayer-gui
+      - mediatool
       - pavucontrol                   # Pulseaudio application-level volume control
       - qtbase5-dev
       - sane-util                     # scanner utils
@@ -337,8 +334,36 @@
       - sox                           # utilities for working with audio
       - ubuntu-restricted-extras
       - vlc
+      - exiftool
       - xsane                         # scanner utils
       - zlib1g-dev
+
+      # dev libs for ffmpegsrc build 
+      - nasm
+      - libx264-dev
+      - libx265-dev 
+      - libnuma-dev
+      - libmp3lame-dev
+      - libvpx-dev
+      - libfdk-aac-dev
+
+      - libass-dev 
+      - libfreetype6-dev 
+      - libgnutls28-dev 
+      - libsdl2-dev 
+      - libtool 
+      - libva-dev 
+      - libvdpau-dev 
+      - libvorbis-dev 
+      - libxcb1-dev 
+      - libxcb-shm0-dev 
+      - libxcb-xfixes0-dev 
+      - pkg-config 
+      - texinfo 
+      - wget 
+      - yasm 
+      - zlib1g-de
+
 
 - name: "install media stuff"
   apt:
@@ -400,6 +425,10 @@
 #     remote_src: yes
 #   tags:
 #     - packer
+
+#curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+#sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+#sudo apt-get update && sudo apt-get install Packer
 
 # - name: "MAP CAPS LOCK TO CTRL"
 #   become: yes
@@ -475,6 +504,12 @@
   apt:
     autoclean: yes
 
+
+#sudo mkdir /usr/share/locale-langpack/pt
+#sudo apt-get install $(check-language-support)
+
+# network-manager-openvpn-gnome
+# https://support.surfshark.com/hc/en-us/articles/360012109779-Connect-to-Surfshark-VPN-using-Ubuntu-Network-Manager#h_01EWRTDG2C6B7NR2ZD7RXHF1K3
 
 # - name: "get python" 
 #   shell: "echo $(ls /usr/bin/pyth* | grep -e 'python3\\.[0-9]$' | sort | tail -1)"

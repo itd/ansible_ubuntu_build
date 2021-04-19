@@ -9,6 +9,11 @@ u18_apps:
   - build-essential
   - gpgv
   - python3-apt
+  - autoconf 
+  - automake 
+  - build-essential 
+  - cmake
+  - curl
 
 u20_apps:
   - python-is-python3
