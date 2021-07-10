@@ -79,7 +79,10 @@
   with_items:
     - ppa:stebbins/handbrake-releases
     - ppa:audio-recorder/ppa
-
+  when:
+    - ansible_distribution_major_version|int < 21
+  tags:
+    - handbrake
 #curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 #sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 #sudo apt-get update && sudo apt-get install Packer
@@ -158,7 +161,7 @@
   vars:
     pkgs:
       - copyq
-      - coptq-plugins
+        #- coptq-plugins
       - exfat-fuse
       - exfat-utils
       - gconf2
@@ -169,7 +172,6 @@
       - hexchat
       - hexchat-indicator
       - hunspell
-      - jq
       - libavcodec-dev
       - libc6-dev
       - libexpat1-dev
@@ -189,19 +191,19 @@
       - rng-tools                 # TRNG interface
       - traceroute                # network path tracer
       - jq                        # JSON processing with filters
-      - miller                    # CSV/TSV/JSON processing with filters
+        #- miller                    # CSV/TSV/JSON processing with filters
       - exif                      # inspect EXIF data inside photos
       - restic                    # incremental encrypted backups
-      - rclone                    # file synchronization utility for various cloud providers
+        #- rclone                    # file synchronization utility for various cloud providers
       - rsync                     # file synchronization utility for synchronization between computers
-      - youtube-dl                # video site downloader
-      - libheif-examples          # programs for working with the HEIF image format (now the default output of iPhone cameras)
+        #- youtube-dl                # video site downloader
+      #- libheif-examples          # programs for working with the HEIF image format (now the default output of iPhone cameras)
       - jupyter-notebook          # Jupyter interactive notebook with Python 3 support
       - default-jdk               # default Java compiler
       - moreutils                 # useful extra command-line tools
       - w3m                       # text-based web browser
       - expect                    # command line automation
-      - shellcheck                # shell script linter
+        #- shellcheck                # shell script linter
       - xdotool                   # programmatically send keystrokes and other input events
       - lshw
       - lsof
@@ -210,6 +212,7 @@
       - openconnect
       - partimage
       - pkg-config
+      - psutils
       - python3-dev
       - python3-pip
       - python3-psutil
@@ -222,10 +225,10 @@
       - vim
       - wget
       - xclip
-      - xfsdump
-      - xfsprogs
-      - xfsprogs
-      - zlib1g-dev
+        #- xfsdump
+        #- xfsprogs
+        #- xfsprogs
+        #- zlib1g-dev
 
 
 - name: "install apps and utils"
@@ -250,12 +253,12 @@
       - libreoffice                   # office suite
       - meld                          # diff viewer/editor
       - nmap                          # Network scanner
-      - pdfshuffler                   # PDF page-level manipulation software
-      - qalculate                     # powerful calculator utility
-      - redshift-gtk                  # screen color temperature changer
-      - simplescreenrecorder          # screen recorder
+        #- pdfshuffler                   # PDF page-level manipulation software
+        #- qalculate                     # powerful calculator utility
+        #- redshift-gtk                  # screen color temperature changer
+        #- simplescreenrecorder          # screen recorder
       - wireshark                     # network traffic analyser
-      - xournal                       # document editor/PDF annotator
+        #- xournal                       # document editor/PDF annotator
       - texlive-lang-portuguese
 
       # - fritzing                      # simple circuit designer
@@ -272,7 +275,8 @@
     pkgs:
       - handbrake-gtk
       - handbrake-cli
-
+  when:
+    - ansible_distribution_major_version|int < 21
 
 - name: "install hspd-12 packages"
   apt:
@@ -287,18 +291,18 @@
   tags:
     - hspd12
 
-- name: "media stuff: jackd might need to be installed first"
-  apt:
-    state: latest
-    name: "{{pkgs}}"
-  tags:
-    - kxstudio
-    - audioprod
-  vars:
-    pkgs:
-    - jackd2 
-    - jack-tools 
-    - jack-keyboard
+#- name: "media stuff: jackd might need to be installed first"
+#  apt:
+#    state: latest
+#    name: "{{pkgs}}"
+#  tags:
+#    #- kxstudio
+#    - audioprod
+#  vars:
+#    pkgs:
+#    - jackd2 
+#    - jack-tools 
+#    - jack-keyboard
 
 - name: "install media stuff"
   apt:
@@ -325,64 +329,64 @@
       - libdvd-pkg
       - libgl1-mesa-dev
       - mplayer-gui
-      - mediatool
       - pavucontrol                   # Pulseaudio application-level volume control
-      - qtbase5-dev
-      - sane-util                     # scanner utils
       - smplayer                      # mplayer gui media util
       - sound-juicer
       - sox                           # utilities for working with audio
       - ubuntu-restricted-extras
       - vlc
-      - exiftool
-      - xsane                         # scanner utils
-      - zlib1g-dev
-
-      # dev libs for ffmpegsrc build 
-      - nasm
-      - libx264-dev
-      - libx265-dev 
-      - libnuma-dev
-      - libmp3lame-dev
-      - libvpx-dev
-      - libfdk-aac-dev
-
-      - libass-dev 
-      - libfreetype6-dev 
-      - libgnutls28-dev 
-      - libsdl2-dev 
-      - libtool 
-      - libva-dev 
-      - libvdpau-dev 
-      - libvorbis-dev 
-      - libxcb1-dev 
-      - libxcb-shm0-dev 
-      - libxcb-xfixes0-dev 
-      - pkg-config 
       - texinfo 
       - wget 
-      - yasm 
-      - zlib1g-de
+      #- qtbase5-dev
+      #- mediatool
+      #- sane-utils                   # scanner utils
+      #- exiftool
+      #- xsane                         # scanner utils
+      #- zlib1g-dev
+
+      # dev libs for ffmpegsrc build 
+      #      - nasm
+      #- libx264-dev
+      #- libx265-dev 
+      #- libnuma-dev
+      #- libmp3lame-dev
+      #- libvpx-dev
+      #- libfdk-aac-dev
+
+      #- libass-dev 
+      #- libfreetype6-dev 
+      #- libgnutls28-dev 
+      #- libsdl2-dev 
+      #- libtool 
+      #- libva-dev 
+      #- libvdpau-dev 
+      #- libvorbis-dev 
+      #- libxcb1-dev 
+      #- libxcb-shm0-dev 
+      #- libxcb-xfixes0-dev 
+      #- pkg-config 
+        #- yasm 
+        #- zlib1g
 
 
-- name: "install media stuff"
-  apt:
-    state: latest
-    name: "{{ pkgs }}"
-  when:
-    ansible_distribution_major_version <= "18"
-  tags:
-    - apps
-    - kxstudion
-  vars:
-    pkgs:
-      - libdvdnav4
-      - libdvdread4
-      - cadence         # "Utils for jackd"
-      - cadence-data
-      - cadence-tools
-      - carla 
-      
+#- name: "install media stuff"
+#  apt:
+#    state: latest
+#    name: "{{ pkgs }}"
+#  when:
+#    ansible_distribution_major_version <= "18"
+#  tags:
+#    - apps
+#    - kxstudion
+#  vars:
+#    pkgs:
+#      #- libdvdnav4
+#        #- libdvdread4
+#        #- cadence         # "Utils for jackd"
+#        #- cadence-data
+#        #- cadence-tools
+#        #- carla 
+#      
 - name: "Setup/reconfigure libdvd-pkg"
   debconf:
     name: libdvd-pkg
@@ -456,7 +460,7 @@
   loop:
     - audio
     - scanner
-    - saned
+      #- saned
 
 - name: 'get the bash-git-promot checkout'
   git:
