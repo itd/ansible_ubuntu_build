@@ -1,24 +1,32 @@
 # ansible_ubuntu_build
-An ansible play to build my laptop config
+An ansible play to build my laptop config - ubuntu 20.04
 
-Run with::
+Prep
 
+Install initial deps::
+    sudo su -
+    apt install git openssh-server psutil aptitude psutil \
+    python3-virtualenv python3-venv python3-pip python3-wheel python-is-python3 \
+    python-is-python3 -y
+    echo "YOURUSER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/YOURUSER
+    exit
+
+Run as you::
     cd ~
-    echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
-    # sudo apt install python3-virtualenv python3-venv python-is-python3 -y
-    sudo apt install aptitude python3-virtualenv python3-venv python-is-python3 psutil -y
-    ./makeall.sh
+    sudo apt 
+    ./makeall.sh  # <--will now run in test with -C
 
     ansible-playbook ./build_laptop.yml -v -u $USER -b -e ansible_python_interpreter=/usr/bin/python3
 
-Example inventory that makes an alias for localhost that uses Python3
-
+Example inventory that makes an alias for localhost that uses Python3:
+    
+    # note.... make this just work against localhost
+    
     localhost-py3 ansible_host=localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
     
     # Example of setting a group of hosts to use Python3
     [py3_hosts]
-    ubuntu16
-    fedora27
+    ubuntu
     
     [py3_hosts:vars]
     ansible_python_interpreter=/usr/bin/python3
