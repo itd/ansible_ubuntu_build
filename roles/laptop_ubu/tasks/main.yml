@@ -57,6 +57,7 @@
   with_items:
     - .bashrc
     - .bash_aliases
+    - .gitconfig
   tags:
     - localfiles
 
