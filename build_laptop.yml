@@ -4,5 +4,6 @@
   roles:
     - laptop_ubu
   vars:
-    packer_ver: '1.6.6'
+    makemkv_ver: '1.16.7'
+    # packer_ver: '1.6.6'
     # local_user: kurt

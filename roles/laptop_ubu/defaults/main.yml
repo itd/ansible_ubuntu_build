@@ -15,5 +15,9 @@ u18_apps:
   - cmake
   - curl
 
+
 u20_apps:
   - python-is-python3
+  - inetutils-tools
+  - inetutils-telnet
+  
